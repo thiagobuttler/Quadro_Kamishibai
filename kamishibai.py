@@ -4,18 +4,42 @@ import pandas as pd
 # Use wide layout so the table can occupy more horizontal space
 st.set_page_config(layout="wide")
 
-# Mobile responsive tweaks: increase font on small screens and enable horizontal scroll
+# Mobile / full-width tweaks: force app to use full width on small screens,
+# handle safe-area insets (notch), and ensure data editor/table stretch.
 st.markdown(
         """
         <style>
-        /* Basic responsive rules for mobile browsers */
+        /* Force app to use full width and remove centering limits */
+        html, body, [data-testid="stAppViewContainer"], [data-testid="stAppViewContainer"] > div {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Reduce default padding to fit mobile */
+        .block-container, .main {
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+
+        /* Avoid white margins on iOS devices with notch */
+        body {
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Make data editor/table occupy full container and allow horizontal scroll */
+        div[data-testid="stDataEditor"], table, .stDataFrame {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: auto;
+        }
+
+        /* Small tweaks for selects and table font on narrow screens */
         @media (max-width: 700px) {
             table {font-size: 14px !important;}
             select {font-size: 14px !important; height: 36px !important;}
-            /* Allow horizontal scroll for wide tables */
-            .stDataEditor, .dataframe, table {max-width: 100%; overflow-x: auto;}
-            /* Reduce default padding to fit mobile */
-            .main > div {padding-left: 8px; padding-right: 8px;}
         }
         </style>
         """,
